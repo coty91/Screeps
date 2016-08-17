@@ -11,13 +11,12 @@ var common = require('common.actions');
 
 var roleUpgrader = {
     run: function(creep) {
-        common.moveTo(creep, FIND_SOURCES, 'upgrader');
-        if(creep.moveTo(18,22)==ERR_NOT_IN_RANGE) {
-            creep.moveTo(18,22);
-        } else {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+        var enemies = creep.room.find(FIND_HOSTILE_CREEPS);
+        if (enemies.length) {
+            if(creep.attack(enemies[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(enemies[0]);
             }
+            console.log('Enemies in sight!');
         }
     }
 };

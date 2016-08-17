@@ -1,14 +1,18 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
+var roleWarrior = require('role.warrior');
 var common = require('common.actions');
 
 module.exports.loop = function() {
 
     var roles = {
-        'harvester': 2, 
+        'warrior': 3,
+        'builder': 3,
+        'repairer': 3,
         'upgrader': 2, 
-        'builder': 8
+        'harvester': 2
     }
 
     for (let name in Memory.creeps) {
@@ -18,7 +22,7 @@ module.exports.loop = function() {
     }
     
     for (var name in Game.creeps) {
-        var creep = Game.creeps[name]; 
+        var creep = Game.creeps[name];
         switch (creep.memory.role) {
             case 'harvester':
                 roleHarvester.run(creep);
@@ -29,11 +33,22 @@ module.exports.loop = function() {
             case 'builder':
                 roleBuilder.run(creep);
                 break;
+            case 'repairer':
+                roleRepairer.run(creep);
+                break;
+            case 'warrior':
+                roleWarrior.run(creep);
+                break;
+                
         }
     }
     
     for (var role in roles) {
-        common.renew(creep, role, [WORK, CARRY, MOVE], roles[role]);
+        if (role != 'warrior') {
+            common.renew(creep, role, [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE], roles[role]);
+        } else {
+            common.renew(creep, role, [ATTACK, ATTACK, ATTACK, RANGED_ATTACK,MOVE,MOVE,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH], roles[role]);
+        }
     }
     
 

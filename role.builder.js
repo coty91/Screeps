@@ -12,6 +12,17 @@ var common = require('common.actions');
 var roleBuilder = {
     run: function(creep) {
         common.moveTo(creep, FIND_SOURCES, 'builder'); 
+        var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+        if(targets.length) {
+            switch (creep.build(targets[0])) {
+                case ERR_RCL_NOT_ENOUGH:
+                    this.moveTo(creep, FIND_SOURCES, 'upgrader');
+                    break;
+                case ERR_NOT_IN_RANGE:
+                    creep.moveTo(targets[0]);
+                    break;
+            }
+        }
     }
 }
 
